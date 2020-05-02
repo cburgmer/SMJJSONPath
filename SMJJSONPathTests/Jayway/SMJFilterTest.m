@@ -64,8 +64,11 @@ NS_ASSUME_NONNULL_BEGIN
 		[jsonString appendString:@"  \"string-key-empty\" : \"\", "];
 		[jsonString appendString:@"  \"char-key\" : \"c\", "];
 		[jsonString appendString:@"  \"arr-empty\" : [], "];
+		[jsonString appendString:@"  \"arr-empty-string\" : [\"\"], "];
 		[jsonString appendString:@"  \"int-arr\" : [0,1,2,3,4], "];
-		[jsonString appendString:@"  \"string-arr\" : [\"a\",\"b\",\"c\",\"d\",\"e\"] "];
+		[jsonString appendString:@"  \"string-arr\" : [\"a\",\"b\",\"c\",\"d\",\"e\"], "];
+		[jsonString appendString:@"  \"arr-of-empty-arr\" : [[]], "];
+		[jsonString appendString:@"  \"obj-key\" : {\"a\": 42} "];
 		[jsonString appendString:@"}"];
 		
 		jsonObject = [self jsonObjectFromString:jsonString];
@@ -168,6 +171,23 @@ NS_ASSUME_NONNULL_BEGIN
 	[self checkApplyFilterString:@"[?(@.int-arr == [0,1,2,3,4,5])]" expectedResult:NO];
 }
 
+- (void)test_complex_json_values
+{
+	[self checkApplyFilterString:@"[?(@.arr-empty-string == [\"\"])]" expectedResult:YES];
+	[self checkApplyFilterString:@"[?(@.obj-key == {\"a\": 42})]" expectedResult:YES];
+	[self checkApplyFilterString:@"[?(@.obj-key == {})]" expectedResult:NO];
+	[self checkApplyFilterString:@"[?(@.obj-key == {\"a\": 43})]" expectedResult:NO];
+	[self checkApplyFilterString:@"[?(@.obj-key == {\"b\": 42})]" expectedResult:NO];
+	[self checkApplyFilterString:@"[?(@.arr-of-empty-arr == [[]])]" expectedResult:YES];
+	[self checkApplyFilterString:@"[?(@.arr-of-empty-arr == [])]" expectedResult:NO];
+	[self checkApplyFilterString:@"[?(@.arr-of-empty-arr == {})]" expectedResult:NO];
+}
+
+- (void)test_invalid_json_values
+{
+	[self checkApplyFilterString:@"[?(@.arr-empty == [''])]" expectedResult:NO];
+	[self checkApplyFilterString:@"[?(@.arr-empty-string == [''])]" expectedResult:NO];
+}
 
 /*
 ** SMJFilterTest - NE

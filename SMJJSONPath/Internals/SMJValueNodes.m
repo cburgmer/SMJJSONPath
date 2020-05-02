@@ -489,19 +489,19 @@ static SMJComparisonResult convertComparison(NSComparisonResult result);
 	id jsonObject1 = [self underlayingObjectWithError:nil];
 	id jsonObject2 = [node underlayingObjectWithError:nil];
 	
-	if ([jsonObject1 respondsToSelector:@selector(compare:)])
-	{
-		NSComparisonResult result = [(NSNumber *)jsonObject1 compare:jsonObject2]; // NSNumber is just to shut down clang++
-		
-		return convertComparison(result);
-	}
-	else
-	{
+//	if ([jsonObject1 respondsToSelector:@selector(compare:)])
+//	{
+//		NSComparisonResult result = [(NSNumber *)jsonObject1 compare:jsonObject2]; // NSNumber is just to shut down clang++
+//
+//		return convertComparison(result);
+//	}
+//	else
+//	{
 		if ([jsonObject1 isEqual:jsonObject2])
 			return SMJComparisonSame;
 		else
 			return SMJComparisonDiffer;
-	}
+//	}
 }
 
 - (nullable id)underlayingObjectWithError:(NSError **)error
